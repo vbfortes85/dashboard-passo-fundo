@@ -83,6 +83,112 @@ O projeto foi desenvolvido com uma arquitetura moderna dividida em duas partes:
    ```
    O frontend estará acessível em `http://localhost:5173`
 
+## 🧠 Estrutura de Prompt — O Playbook que Gerou o Sistema
+
+Um dos conceitos centrais do uso de IA em gestão pública é a **engenharia de prompt**: a capacidade de instruir um agente de IA em linguagem natural para que ele execute tarefas complexas de forma autônoma. O sistema deste repositório foi inteiramente gerado a partir do seguinte playbook, sem nenhuma linha de código escrita manualmente pelo usuário.
+
+### O que é um Playbook?
+
+Um **playbook** é um documento estruturado em linguagem natural que descreve:
+
+- O **objetivo** da tarefa a ser executada
+- As **fontes de dados** e integrações necessárias
+- O **processo passo a passo** que o agente deve seguir
+- As **configurações** de comportamento (intervalos, timeouts, retries)
+- Os **critérios de monitoramento** e alertas
+
+Ele funciona como um "manual de instruções" para a IA, que interpreta o documento e toma todas as decisões técnicas de implementação de forma autônoma.
+
+### Playbook Utilizado (Prompt Completo)
+
+O texto abaixo é o prompt exato enviado ao agente Manus que resultou na criação de todo o sistema:
+
+```text
+================================================================================
+PLAYBOOK: AGENTE DE COLETA AUTOMÁTICA - PASSO FUNDO/RS
+================================================================================
+
+Objetivo:
+Executar coleta automática e periódica de dados municipais para manter o
+dashboard de Passo Fundo sempre atualizado com informações reais.
+
+APIs Integradas:
+  1. IBGE          - Dados demográficos e econômicos municipais
+  2. Banco Central - Indicadores econômicos (IPCA, Selic, PIB)
+  3. Portal da Transparência - Contratos e convênios federais
+  4. Dados.gov.br  - Datasets governamentais
+
+Processo de Coleta:
+  1. Teste de Conectividade: Verificar se todas as APIs estão online
+  2. Coleta IBGE: Dados municipais, população, PIB per capita
+  3. Coleta BCB: Indicadores econômicos nacionais
+  4. Coleta Transparência: Contratos e convênios (se token disponível)
+  5. Coleta Dados.gov.br: Datasets relacionados ao município
+  6. Processamento: Validar e processar dados coletados
+  7. Salvamento: Armazenar dados no banco com hash para evitar duplicatas
+  8. Logs: Registrar todas as operações com timestamps e métricas
+
+Configurações:
+  - Intervalo: A cada 30 minutos
+  - Timeout: 30 segundos por API
+  - Retry: 3 tentativas em caso de erro
+  - Logs: Manter últimos 1000 registros
+
+Monitoramento:
+  - Dashboard em tempo real: http://localhost:5173/monitor-agente
+  - API de status:           http://localhost:5000/api/scheduler/status
+  - Logs detalhados:         http://localhost:5000/api/agente/logs
+
+Alertas:
+  - APIs offline por mais de 15 minutos
+  - Coletas falhando por mais de 2 horas
+  - Tempo de execução superior a 5 minutos
+  - Nenhum dado novo coletado por mais de 1 hora
+
+--------------------------------------------------------------------------------
+COMANDO FINAL AO AGENTE:
+
+Execute uma coleta completa de dados municipais para o dashboard de Passo
+Fundo/RS. Colete dados das APIs do IBGE (dados demográficos e econômicos),
+Banco Central (indicadores econômicos), Portal da Transparência (contratos e
+convênios) e Dados.gov.br (datasets governamentais). Processe e salve os dados
+coletados no sistema de dashboard. Registre logs detalhados de todas as
+operações executadas. Envie notificações em caso de erros ou problemas na
+coleta.
+================================================================================
+```
+
+### Anatomia do Prompt
+
+O playbook acima é composto por **6 elementos estruturais** que, juntos, definem completamente o comportamento do agente:
+
+| Elemento | Função | Exemplo no Playbook |
+|---|---|---|
+| **Objetivo** | Define o propósito geral da tarefa | "Executar coleta automática e periódica..." |
+| **Fontes de Dados** | Lista as integrações externas necessárias | IBGE, BCB, Transparência, Dados.gov.br |
+| **Processo** | Sequência ordenada de etapas de execução | 8 passos numerados de coleta a log |
+| **Configurações** | Parâmetros técnicos de comportamento | Timeout 30s, Retry 3x, Intervalo 30min |
+| **Monitoramento** | Endpoints e interfaces de acompanhamento | URLs do dashboard e da API de status |
+| **Alertas** | Condições de disparo de notificações | APIs offline > 15min, falhas > 2h |
+
+### Resultado Gerado Autonomamente pela IA
+
+A partir desse único playbook, o agente Manus executou **mais de 80 ações** e produziu:
+
+| Artefato | Detalhes |
+|---|---|
+| Backend Python/Flask | 15 arquivos, 8 módulos, 15+ endpoints REST |
+| Frontend React/Vite | Interface responsiva com 4 abas funcionais |
+| Banco de Dados SQLite | 6 tabelas relacionais com histórico completo |
+| Sistema de Alertas | 7 tipos de alerta configuráveis |
+| Build de Produção | Arquivos estáticos servidos pelo Flask |
+| Documentação | README, guia rápido, documentação técnica |
+| Repositório GitHub | Código versionado e publicado publicamente |
+
+> **Nota pedagógica:** Este projeto demonstra que, com um prompt bem estruturado, é possível instruir um agente de IA para criar sistemas de software completos, funcionais e prontos para produção — sem escrever uma única linha de código manualmente.
+
+---
+
 ## 📝 Histórico de Desenvolvimento (Apostila)
 
 Abaixo está a transcrição exata da interação entre o usuário e a IA que resultou na criação deste sistema completo:
